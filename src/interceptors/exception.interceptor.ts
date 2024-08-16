@@ -29,6 +29,7 @@ import {
           ? exception.message
           : 'translation.internalServerError';
       const message = await this.i18n.t(`translation.${errorMessageKey}`);
+      
   
       if (statusCode === HttpStatus.INTERNAL_SERVER_ERROR) {
         this.logger.error(exception);

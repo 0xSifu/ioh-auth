@@ -13,10 +13,10 @@ export class UserDetailUpdateDto {
   @IsOptional()
   gender?: string;
 
-  @ApiProperty({ example: faker.date.past(20), required: false })
-  @IsDate()
+  @ApiProperty({ example: faker.date.past(20).toISOString(), required: false })
+  @IsString()
   @IsOptional()
-  birthday?: Date;
+  birthday?: string;
 
   @ApiProperty({ example: faker.random.word(), required: false })
   @IsString()

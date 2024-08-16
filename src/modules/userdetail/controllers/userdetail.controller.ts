@@ -21,16 +21,14 @@ export class UserDetailController {
   }
 
   @Put(':userId')
-  async updateProfile(
-    @Param('userId') userId: string,
-    @Body() data: UserDetailUpdateDto,
-  ): Promise<UserDetailResponseDto> {
+  async updateProfile(@Param('userId') userId: string, @Body() data: UserDetailUpdateDto): Promise<UserDetailResponseDto> {
     const updatedUserDetail = await this.userDetailService.updateProfile(userId, data);
     return updatedUserDetail;
   }
 
   @Get(':userId')
   async getProfileById(@Param('userId') userId: string): Promise<UserDetailResponseDto> {
+    console.log('Received data:', userId);
     const userDetail = await this.userDetailService.getProfileById(userId);
     return userDetail;
   }

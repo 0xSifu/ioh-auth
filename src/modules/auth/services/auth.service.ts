@@ -63,7 +63,6 @@ import {
   
     async generateTokens(user: IAuthPayload): Promise<ITokenResponse> {
       try {
-        // Generate access token
         const accessToken = await this.jwtService.signAsync(
           {
             id: user.id,
@@ -77,7 +76,6 @@ import {
           },
         );
   
-        // Generate refresh token
         const refreshToken = await this.jwtService.signAsync(
           {
             id: user.id,

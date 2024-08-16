@@ -11,16 +11,22 @@ export class UserDetailService implements IUserDetailService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async updateProfile(userId: string, data: UserDetailUpdateDto): Promise<UserDetailResponseDto> {
-    const updatedUserDetail = await this.prismaService.userDetail.update({
-      where: { id: userId },
-      data: {
-        ...data,
-        updatedAt: new Date(),
-      },
-    });
-
-    return this.mapToResponseDto(updatedUserDetail);
+    try {
+      const updatedUserDetail = await this.prismaService.userDetail.update({
+        where: { userId: userId },
+        data: {
+          ...data,
+          birthday: data.birthday ? new Date(data.birthday) : null,
+          updatedAt: new Date(),
+        },
+      });
+      return this.mapToResponseDto(updatedUserDetail);
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      throw new Error('Failed to update profile');
+    }
   }
+  
 
   async createProfile(data: UserDetailCreateDto): Promise<UserDetailResponseDto> {
     // console.log('Received data:', data);
@@ -37,7 +43,7 @@ export class UserDetailService implements IUserDetailService {
 
   async getProfileById(userId: string): Promise<UserDetailResponseDto> {
     const userDetail = await this.prismaService.userDetail.findUnique({
-      where: { id: userId },
+      where: { userId: userId },
     });
 
     return this.mapToResponseDto(userDetail);
