@@ -136,20 +136,22 @@ import {
   
     async signup(data: UserCreateDto): Promise<AuthResponseDto> {
       try {
-        const { email, username, password } = data;
+        const { email, username, password, is_account_admin, is_admin, userLanguage, userStatus } = data;
         const findUser = await this.userService.getUserByEmail(email);
         if (findUser) {
-          throw new HttpException('userExists', HttpStatus.CONFLICT);
+          throw new HttpException('User already exists', HttpStatus.CONFLICT);
         }
-        const passwordHashed = this.helperHashService.createHash(password);
+        const passwordHashed = await this.helperHashService.createHash(password);
         const createdUser = await this.userService.createUser({
           email,
           username,
           password: passwordHashed,
+          is_account_admin,
+          is_admin,
+          userLanguage,
+          userStatus
         });
-        const tokens = await this.generateTokens({
-          id: createdUser.id,
-        });
+        const tokens = await this.generateTokens({ id: createdUser.id });
         delete createdUser.password;
         return {
           ...tokens,
@@ -159,7 +161,7 @@ import {
         throw e;
       }
     }
-
+    
     async logout(userId: string): Promise<boolean> {
       try {
         await this.authClient.emit('user.logout', { userId });

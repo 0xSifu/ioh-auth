@@ -31,7 +31,6 @@ export class UserController {
     @Param('id') id: string,
     @Body() data: UpdateUserDto,
   ): Promise<UserResponseDto> {
-    console.log("BAJILAK : ",id);
     
     return this.userService.updateUser(id, data);
   }

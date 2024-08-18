@@ -1,10 +1,12 @@
 import { Controller, Param, Body, Get, Post, Put } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { UserDetailCreateDto } from '../dtos/userdetail.create.dto';
 import { UserDetailUpdateDto } from '../dtos/userdetail.update.dto';
 import { UserDetailResponseDto } from '../dtos/userdetail.response.dto';
 import { UserDetailService } from '../services/userdetail.service';
 import { IUserDetailService } from '../interfaces/userdetail.service.interface';
+import { GeneralResponseDto } from 'src/modules/user/dtos/general.response.dto';
+import { Serialize } from 'src/decorators/serialize.decorator';
 
 @ApiTags('Profile')
 @Controller({
@@ -28,8 +30,12 @@ export class UserDetailController {
 
   @Get(':userId')
   async getProfileById(@Param('userId') userId: string): Promise<UserDetailResponseDto> {
-    console.log('Received data:', userId);
     const userDetail = await this.userDetailService.getProfileById(userId);
     return userDetail;
+  }
+
+  @Get()
+  async getAllUsers(): Promise<GeneralResponseDto[]> {
+    return this.userDetailService.getAllUsers();
   }
 }

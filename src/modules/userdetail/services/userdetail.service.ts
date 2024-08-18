@@ -4,7 +4,8 @@ import { IUserDetailService } from '../interfaces/userdetail.service.interface';
 import { UserDetailCreateDto } from '../dtos/userdetail.create.dto';
 import { UserDetailUpdateDto } from '../dtos/userdetail.update.dto';
 import { UserDetailResponseDto } from '../dtos/userdetail.response.dto';
-import { UserDetail } from '@prisma/client';
+import { User, UserDetail } from '@prisma/client';
+import { GeneralResponseDto } from 'src/modules/user/dtos/general.response.dto';
 
 @Injectable()
 export class UserDetailService implements IUserDetailService {
@@ -29,7 +30,6 @@ export class UserDetailService implements IUserDetailService {
   
 
   async createProfile(data: UserDetailCreateDto): Promise<UserDetailResponseDto> {
-    // console.log('Received data:', data);
     const createdUserDetail = await this.prismaService.userDetail.create({
       data: {
         ...data,
@@ -47,6 +47,20 @@ export class UserDetailService implements IUserDetailService {
     });
 
     return this.mapToResponseDto(userDetail);
+  }
+
+  async getAllUsers(): Promise<GeneralResponseDto[]> {
+    const users = await this.prismaService.user.findMany();
+    return users.map(user => this.mapToGeneralResponseDto(user));
+  }
+  
+  private mapToGeneralResponseDto(user: User): GeneralResponseDto {
+    return {
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      isActive: user.isActive,
+    };
   }
 
   private mapToResponseDto(userDetail: UserDetail | null): UserDetailResponseDto {
