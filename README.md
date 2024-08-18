@@ -8,6 +8,12 @@
 $ yarn
 ```
 
+## Env
+
+```bash
+$ cp .env.local .env
+```
+
 ## Database
 
 ```bash
